@@ -56,16 +56,11 @@ class _loginPageState extends State<loginPage> {
                 TextField(
                   controller: pass,
                   decoration: InputDecoration(
+                    suffixIcon: Icon(Icons.visibility_off_outlined),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10))
                       ),
-                      label: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Password'),
-                          Icon(Icons.visibility_off_outlined)
-                        ],
-                      ),
+                      label: Text('Password'),
                       floatingLabelBehavior: FloatingLabelBehavior.auto
                   ),
                 ),
@@ -85,7 +80,9 @@ class _loginPageState extends State<loginPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text('Dont have account?'),
-                    Text('create new account.',style: TextStyle(color: Colors.green[600]),)
+                    TextButton(onPressed: () {
+                      Navigator.pushNamed(context, 'signup');
+                    }, child: Text('create new account.',style: TextStyle(color: Colors.green[600]),))
                   ],
                 ),
                 SizedBox(height: 20,),
@@ -103,7 +100,7 @@ class _loginPageState extends State<loginPage> {
                     ],
                   ),
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.blue[900])
+                        backgroundColor: MaterialStateProperty.all(Colors.indigo[900])
                     ),
                   ),
                 ),
@@ -120,7 +117,7 @@ class _loginPageState extends State<loginPage> {
                     ],
                   ),
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.blue)
+                        backgroundColor: MaterialStateProperty.all(Colors.blue),
                     ),
                   ),
                 ),
