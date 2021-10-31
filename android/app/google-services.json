@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "881116366165",
+    "project_id": "water-supply-project-22fe6",
+    "storage_bucket": "water-supply-project-22fe6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:881116366165:android:7eaff074ec198f9e5e9bdc",
+        "android_client_info": {
+          "package_name": "com.example.gps"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "881116366165-ptm270cmmp03sqp0p9j8rst2o7lltn9r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDtzwZQiHa9qu-GqHXtvekeanNscI7Axg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "881116366165-ptm270cmmp03sqp0p9j8rst2o7lltn9r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
