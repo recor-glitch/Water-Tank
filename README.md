@@ -1,16 +1,3 @@
-# gps
+# Water Supply
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+ Online booking and tracking of water supply truck is a system that is developed to manage all water supply truck hiring work online. It’s useful for water supply agencies that are specialized in hiring water supply trucks to customers. Using this system it is very easy for customer to book a truck for water supply and water supply agencies can also track their booking online. It is an online system through which customers can view available water supply agencies; register the truck for water supply, view profile and book trucks.
