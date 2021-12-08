@@ -1,6 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class profile extends StatelessWidget {
+  final String name;
+  final String email;
+  final String profilepic;
+  final FirebaseAuth fauth;
+
+  profile({required this.name, required this.email, required this.profilepic, required this.fauth});
 
 
   @override
@@ -10,13 +17,9 @@ class profile extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-              accountName: Text('Gourav'),
-              accountEmail: Text('gauravmazumdar92@gmail.com'),
-              currentAccountPicture: CircleAvatar(
-                child: ClipOval(
-                  child: Icon(Icons.account_circle)
-                  ),
-              ),
+            accountName: Text(name),
+            accountEmail: Text(email),
+            currentAccountPicture: CircleAvatar(backgroundImage: NetworkImage(profilepic),),
             decoration: BoxDecoration(
               color: Colors.green[700],
             ),
@@ -44,9 +47,12 @@ class profile extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            title: Text('Exit'),
+            title: Text('Logout'),
             leading: Icon(Icons.exit_to_app),
-            onTap: () => null,
+            onTap: () {
+              fauth.signOut();
+              Navigator.pushReplacementNamed(context, '/login');
+            },
           ),
         ],
       ),

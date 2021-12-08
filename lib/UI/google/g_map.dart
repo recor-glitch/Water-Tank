@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:gps/UI/core/widgets/customTextField.dart';
+import 'package:gps/Infrastructure/Google/Direction/direction_repository.dart';
+import 'package:gps/Models/Google%20Models/direction_model.dart';
 import 'package:location/location.dart';
 
 
@@ -13,7 +15,8 @@ class g_map extends StatefulWidget {
 }
 
 class _MyAppState extends State<g_map> {
-  late GoogleMapController mapController;
+  Completer<GoogleMapController> mapController = Completer();
+  late GoogleMapController controller;
   var l_data;
   Location location = Location();
   var isServiceEnabled;
@@ -21,23 +24,20 @@ class _MyAppState extends State<g_map> {
   List<Marker> mymarker = [];
   late double lat, lon;
   late Marker origin, destination;
-  late TextEditingController placescontroller;
-
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-  }
+  late LatLng originpos, despos;
+  var route;
+  late DirectionData info;
+  late DirectionRepository direction;
 
   @override
   void dispose() {
-    mapController.dispose();
-    placescontroller.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
+    direction = DirectionRepository();
     // TODO: implement initState
-    placescontroller = new TextEditingController();
     super.initState();
   }
 
@@ -62,62 +62,55 @@ class _MyAppState extends State<g_map> {
   @override
   Widget build(BuildContext context) {
     Service();
-    return Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: const Text('Water Tank'),
-            backgroundColor: Colors.green[700],
-          ),
-          body: FutureBuilder(
-            future: location.getLocation(),
-            builder: (BuildContext context, AsyncSnapshot<LocationData> snapshot) {
-              if(snapshot.hasData) {
-                print(snapshot.data);
-                lat = snapshot.data!.latitude!;
-                lon = snapshot.data!.longitude!;
-                mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(lat, lon),zoom: 15.0)));
-                origin = Marker(markerId: const MarkerId('mypos'),
-                    position: LatLng(lat, lon),
-                    draggable: true,
-                    infoWindow: const InfoWindow(title: 'Your Position'),
-                    icon: BitmapDescriptor.defaultMarker);
-                mymarker.add(origin);
-              }
-              return Stack(
-                children: [
-                  GoogleMap(
-                      onMapCreated: _onMapCreated,
-                      initialCameraPosition: const CameraPosition(
-                        target:  LatLng(26.144518, 91.736237),
-                        zoom: 12.0,
-                      ),
-                      markers: Set.from(mymarker),
-                      mapType: MapType.normal,
-                    onLongPress: (loc) {
-                        setState(() {
-                          mymarker.add(
-                              Marker(markerId: MarkerId('des'),
-                                position: LatLng(loc.latitude,loc.longitude),
-                                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-                                infoWindow: const InfoWindow(title: 'Destination'),
-                              ));
-                        });
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Column(
-                        children: [
-                          customTextField(placescontroller, const Icon(Icons.search), "Your Location"),
-                        ],
-                      )
-                    ),
-                  ),
-                ],
-              );
-            },)
+    return FutureBuilder(
+      future: location.getLocation(),
+      builder: (BuildContext context, AsyncSnapshot<LocationData> snapshot) {
+        if(snapshot.hasData) {
+          lat = snapshot.data!.latitude!;
+          lon = snapshot.data!.longitude!;
+          originpos = LatLng(lat, lon);
+          gotolocation(lat,lon);
+          origin = Marker(markerId: const MarkerId('mypos'),
+              position: LatLng(lat, lon),
+              draggable: false,
+              infoWindow: const InfoWindow(title: 'Your Position'),
+              icon: BitmapDescriptor.defaultMarker);
+          mymarker.add(origin);
+        }
+        return Stack(
+          children: [
+            GoogleMap(
+              onMapCreated: (GoogleMapController controller) async {
+                mapController.complete(controller);
+              },
+              initialCameraPosition: const CameraPosition(
+                target:  LatLng(26.144518, 91.736237),
+                zoom: 12.0,
+              ),
+              markers: Set.from(mymarker),
+              mapType: MapType.normal,
+              onLongPress: (loc) async {
+                despos = loc;
+                setState(() {
+                  destination = Marker(markerId: MarkerId('des'),
+                      position: loc,
+                      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+                      infoWindow: const InfoWindow(title: 'Destination'));
+                  mymarker.add(destination);
+                });
+                route = await direction.getDirection(originpos, despos);
+                info = route as DirectionData;
+                print('info:: $info');
+              },
+            ),
+          ],
+        );
+      },
     );
+  }
+
+  Future<void> gotolocation(double lat, double lon) async {
+    controller = await mapController.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(lat, lon),zoom: 15.0)));
   }
 }

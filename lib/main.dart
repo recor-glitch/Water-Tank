@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gps/UI/Admin/adminbasePage.dart';
+import 'package:gps/UI/Driver/driverbase.dart';
+import 'package:gps/UI/User/basePage.dart';
 import 'package:gps/UI/core/layouts/loading.dart';
-import 'package:gps/UI/google/g_map.dart';
 import 'UI/Auth/login/frontPage.dart';
 import 'UI/Auth/signup/signup.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,10 +14,12 @@ Future<void> main() async {
   runApp(MaterialApp(
     initialRoute: '/',
     routes: {
+      '/': (context) => loading(),
       '/login': (context) => loginPage(),
       '/signup': (context) => signupPage(),
-      '/g_map': (context) => g_map(),
-      '/': (context) => loading(),
+      '/userbase': (context) => basePage(),
+      '/agentbase': (context) => adminbasePage(),
+      '/driverbase': (context) => driverbase(),
     },
   ));
 }

@@ -4,7 +4,7 @@ import 'package:gps/constants.dart';
 import 'package:dio/dio.dart';
 
 class DirectionRepository {
-   late final String baseUrl;
+   static late final String baseUrl;
    Dio dio = Dio();
    DirectionData directionData = DirectionData();
 
@@ -17,6 +17,8 @@ class DirectionRepository {
              'key': g_apikey,
           });
       if(result.statusCode == 200) {
+        print('Request successfull.');
+        print('Result :: $result');
          //get the direction data...
         directionData.polylinepoints = result["routes"][0]["overview_polyline"]["points"];
         directionData.distancetext = result["routes"][0]["legs"][0]["distance"]["text"];

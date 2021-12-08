@@ -84,7 +84,7 @@ class _tab1State extends State<tab1> {
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10))
                   ),
-                  label: Text('Name'),
+                  label: Text('Agency name'),
                   errorText: nameval? nameres : null,
                   floatingLabelBehavior: FloatingLabelBehavior.auto
               ),
@@ -171,7 +171,7 @@ class _tab1State extends State<tab1> {
                   setState(() {
                     isvisible = false;
                     nameval = true;
-                    nameres = "Enter your name.";
+                    nameres = "Enter agency name.";
                   });
                 }
                 else if(email.text == "") {

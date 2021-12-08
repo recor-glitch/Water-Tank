@@ -1,20 +1,20 @@
 {
   "project_info": {
-    "project_number": "432459430959",
-    "project_id": "watertank-beafb",
-    "storage_bucket": "watertank-beafb.appspot.com"
+    "project_number": "593835043062",
+    "project_id": "watertank-39abf",
+    "storage_bucket": "watertank-39abf.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:432459430959:android:50af26006f34e1a63d5ada",
+        "mobilesdk_app_id": "1:593835043062:android:2cd4db3cdb98c1b516a4d7",
         "android_client_info": {
           "package_name": "com.example.gps"
         }
       },
       "oauth_client": [
         {
-          "client_id": "432459430959-ac6ofd3kv364qlko46m4g46qhu6ln63f.apps.googleusercontent.com",
+          "client_id": "593835043062-btn9k90hgotnhrlqdtccdsgtfuvkfk2r.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.gps",
@@ -22,20 +22,20 @@
           }
         },
         {
-          "client_id": "432459430959-114u375devqq9ag2q6ev2sk5qeqluucd.apps.googleusercontent.com",
+          "client_id": "593835043062-e64febte4beifrgurl95e2cdfrvldpsg.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDR9nLmV0T5B98gSmt5KbdOTPrPxCfDHZA"
+          "current_key": "AIzaSyCoYxTc8M6sGpEYIw7mtRV9r_3075kQ7Q4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "432459430959-114u375devqq9ag2q6ev2sk5qeqluucd.apps.googleusercontent.com",
+              "client_id": "593835043062-e64febte4beifrgurl95e2cdfrvldpsg.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -22,6 +22,8 @@ class userfcade {
       } else if (e.code == 'email-already-in-use') {
         print('The account already exists for that email.');
         return e.code.replaceAll("-", " ");
+      } else {
+        return e.code.replaceAll("_", " ");
       }
     }
     return 'true';
@@ -43,6 +45,8 @@ class userfcade {
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided for that user.');
         return e.code.replaceAll("-", " ");
+      } else {
+        return e.code.replaceAll("_", " ");
       }
     }
     return 'true';

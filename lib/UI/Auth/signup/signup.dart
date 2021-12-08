@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gps/UI/Admin/tabs/admintabs.dart';
 
 import 'Tabs/tab1.dart';
 import 'Tabs/tab2.dart';
+import 'Tabs/tab3.dart';
 
 class signupPage extends StatefulWidget {
 
@@ -14,13 +16,14 @@ class _loginPageState extends State<signupPage> with TickerProviderStateMixin {
   late TextEditingController email, pass, name;
   final List<String> _tabs = <String>[
     "Agencies",
-    "Customer"
+    "Customer",
+    "Driver"
   ];
   late TabController _tabController;
 
   @override
   void initState() {
-    _tabController = TabController(vsync: this, length: 2);
+    _tabController = TabController(vsync: this, length: 3);
     super.initState();
   }
 
@@ -53,7 +56,11 @@ class _loginPageState extends State<signupPage> with TickerProviderStateMixin {
                   Tab(
                     text: 'Agency',
                     icon: Icon(Icons.emoji_transportation),
-                  )
+                  ),
+                  Tab(
+                    text: 'Driver',
+                    icon: Icon(Icons.assignment_ind_rounded),
+                  ),
                 ],
               ),
             )
@@ -64,6 +71,7 @@ class _loginPageState extends State<signupPage> with TickerProviderStateMixin {
           children: [
             const tab2(),
             const tab1(),
+            const tab3()
           ],
         ),
 
