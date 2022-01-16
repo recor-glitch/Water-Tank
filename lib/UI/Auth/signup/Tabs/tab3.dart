@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:gps/Infrastructure/Agency/driver_details.dart';
+import 'package:gps/Infrastructure/Driver/driver_details.dart';
 import 'package:gps/Infrastructure/Authentication/reg_email_pass.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,13 +22,13 @@ class tab3 extends StatefulWidget {
 class _adddriverState extends State<tab3> {
 
   late TextEditingController name,phn,vehicle,reg,email,pass;
-  late XFile _image;
+  late XFile _image, license;
   late ImagePicker picker;
   late FirebaseStorage _fstorage;
   late FirebaseFirestore _fstore;
   late FirebaseAuth _fauth;
   late bool imagevisible, nameval, phnval, vehicleval, regval, emailval, passval;
-  late String imgUrl, nameres, phnres, vehicleres, regres, emailres, passres, result;
+  late String imgUrl, nameres, phnres, vehicleres, regres, emailres, passres, result, licenseUrl;
   late driverfcade d_fcade;
   late userfcade fcade;
   late bool visible;
@@ -57,6 +57,8 @@ class _adddriverState extends State<tab3> {
     _fstorage = FirebaseStorage.instance;
     _fstore = FirebaseFirestore.instance;
     _fauth = FirebaseAuth.instance;
+
+    licenseUrl = '';
     imgUrl = "";
     result = "";
     visible = false;
@@ -79,18 +81,36 @@ class _adddriverState extends State<tab3> {
 
   Future<void> get_Galleryimage() async {
     var picked = await picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _image = XFile(picked!.path);
-      imgUrl = _image.path;
-    });
+    try{
+      setState(() {
+        _image = XFile(picked!.path);
+        imgUrl = _image.path;
+      });
+    }catch(e) {
+      print(e);
+    }
   }
 
   Future<void> get_Cameraimage() async {
     final picked = await picker.pickImage(source: ImageSource.camera);
-    setState(() {
-      _image = XFile(picked!.path);
-      imgUrl = _image.path;
-    });
+    try{
+      setState(() {
+        _image = XFile(picked!.path);
+        imgUrl = _image.path;
+      });
+    }catch(e) {
+      print(e);
+    }
+  }
+
+  void _showToast(BuildContext context, String msg) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        action: SnackBarAction(label: 'Ok', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
   }
 
   @override
@@ -308,12 +328,69 @@ class _adddriverState extends State<tab3> {
                     },
                     controller: reg,
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(10))
                         ),
-                        label: Text('Registration number'),
+                        label: const Text('Registration number'),
                         errorText: regval? regres : null,
                         floatingLabelBehavior: FloatingLabelBehavior.auto
+                    ),
+                  ),
+                  const SizedBox(height: 20,),
+                  Text('Upload License',style: TextStyle(fontSize: 20),),
+                  SizedBox(height: 20,),
+                  InkWell(
+                    onTap: () async{
+                      return showDialog(context: context, builder: (BuildContext context) {
+                        return SimpleDialog(
+                          title: const Text('Choose'),
+                          children: [
+                            Row(
+                              children: [
+                                InkWell(child: Icon(Icons.photo,size: 30,),onTap: () async {
+                                  Navigator.pop(context);
+                                  var picked = await picker.pickImage(source: ImageSource.gallery);
+                                  try{
+                                    setState(() {
+                                      license = XFile(picked!.path);
+                                      licenseUrl = _image.path;
+                                      print(licenseUrl);
+                                    });
+                                  }catch(e) {
+                                    print(e);
+                                  }
+                                },),
+                                InkWell(child: Icon(Icons.camera,size: 30,),onTap: () async {
+                                  Navigator.pop(context);
+                                  var picked = await picker.pickImage(source: ImageSource.camera);
+                                  try{
+                                    setState(() {
+                                      license = XFile(picked!.path);
+                                      licenseUrl = _image.path;
+                                    });
+                                  }catch(e) {
+                                    print(e);
+                                  }
+                                },),
+                              ],
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            )
+                          ],
+                        );
+
+                      });
+                    },
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Container(
+                        height: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                          border: Border.all(width: 1,color: Colors.black26)
+                        ),
+                        child: licenseUrl == ""? const Center(child: Icon(Icons.add,color: Colors.black26,size: 30,),)
+                            : ClipRRect(child: Image.file(i.File(license.path),fit: BoxFit.fill),borderRadius: BorderRadius.circular(5),)
+                      ),
                     ),
                   ),
                   const SizedBox(height: 30,),
@@ -324,10 +401,10 @@ class _adddriverState extends State<tab3> {
                       setState(() {
                         visible = true;
                       });
-                      if(name.text != "" && phn.text != "" && vehicle.text != "" && reg.text != "") {
+                      if(name.text != "" && phn.text != "" && vehicle.text != "" && reg.text != "" && licenseUrl != "") {
                         result = await fcade.CreateUser(name.text, email.text, pass.text, 'driver');
                         d_fcade = driverfcade(_fauth,_fstore,_fstorage);
-                        await d_fcade.Register_driver(name.text, phn.text, vehicle.text, reg.text, _image);
+                        await d_fcade.Register_driver(name.text, phn.text, vehicle.text, reg.text, _image, license);
                         if(result.contains('true')) {
                           visible = false;
                           Navigator.pushReplacementNamed(context, '/');
@@ -348,39 +425,49 @@ class _adddriverState extends State<tab3> {
                       }
                       if(name.text == "") {
                         setState(() {
+                          visible = false;
                           nameval = true;
                           nameres = "Enter your name";
                         });
                       }
                       if(phn.text == "") {
                         setState(() {
+                          visible = false;
                           phnval = true;
                           phnres = "Enter your Phone number";
                         });
                       }
                       if(vehicle.text == "") {
                         setState(() {
+                          visible = false;
                           vehicleval = true;
                           vehicleres = "Enter your vehicle name";
                         });
                       }
                       if(reg.text == "") {
                         setState(() {
+                          visible = false;
                           regval = true;
                           regres = "Enter vehicle registration number";
                         });
                       }
                       if(email.text == "") {
                         setState(() {
+                          visible = false;
                           emailres = "Enter your email";
                           emailval = true;
                         });
                       }
                       if(pass.text == "") {
                         setState(() {
+                          visible = false;
                           passval = true;
                           passres = "Enter your password";
                         });
+                      }
+                      if(licenseUrl == "") {
+                        visible = false;
+                        _showToast(context, 'Upload your license');
                       }
                     },child: visible? const CircularProgressIndicator()
                         : const Text('Submit'),style: ElevatedButton.styleFrom(primary: Colors.green[700]),),

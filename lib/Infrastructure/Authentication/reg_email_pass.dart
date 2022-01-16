@@ -10,7 +10,7 @@ class userfcade {
   Future<String> CreateUser(String name, String email, String pass, String type) async {
     try {
       await _fauth.createUserWithEmailAndPassword(email: email.trim(), password: pass.trim()).then((value) async {
-        Map<String, String> data = {'name': name, 'email': email, 'pass': pass, 'uid': value.user!.uid, 'type': type,};
+        Map<String, String> data = {'name': name, 'email': email, 'pass': pass, 'uid': value.user!.uid, 'type': type, 'uid': _fauth.currentUser!.uid};
         await _fstore.collection('user').doc(value.user!.uid).set(data);
         print('User Created Successfully!');
         return 'true';

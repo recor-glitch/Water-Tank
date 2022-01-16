@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gps/UI/Admin/tabs/admintabs.dart';
+import 'package:gps/UI/core/layouts/drawer.dart';
 
 
 
@@ -28,6 +29,7 @@ class _adminbasePageState extends State<adminbasePage> with TickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: profile(fauth: fauth),
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return [

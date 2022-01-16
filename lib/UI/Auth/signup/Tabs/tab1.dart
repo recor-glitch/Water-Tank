@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gps/Infrastructure/Agency/agencyfcade.dart';
 import 'package:gps/Infrastructure/Authentication/reg_email_pass.dart';
 
 class tab1 extends StatefulWidget {
@@ -13,25 +14,32 @@ class tab1 extends StatefulWidget {
 
 class _tab1State extends State<tab1> {
 
-  late TextEditingController email, pass, name;
+  late TextEditingController email, pass, name, add, phn;
   late final FirebaseAuth _fauth;
   late final FirebaseFirestore _fstore;
   late userfcade fcade;
-  late bool isvisible, nameval, emailval, passval;
-  late String res, nameres, emailres, passres;
+  late agencyfcade a_fcade;
+  late bool isvisible, nameval, emailval, passval,addval,phnval;
+  late String res, nameres, emailres, passres, addres, phnres;
 
   @override
   void initState() {
     email = new TextEditingController();
     pass = new TextEditingController();
     name = new TextEditingController();
+    phn = new TextEditingController();
+    add = new TextEditingController();
+
     _fauth = FirebaseAuth.instance;
     _fstore = FirebaseFirestore.instance;
     fcade = userfcade(_fauth, _fstore);
+    a_fcade = agencyfcade(_fauth, _fstore);
     isvisible = false;
     res = "";
     passres = "";
     passval = false;
+    addval = false;
+    phnval = false;
     nameres = "";
     emailres = "";
     nameval = false;
@@ -77,6 +85,10 @@ class _tab1State extends State<tab1> {
                     nameres = "";
                     emailres = "";
                     passres = "";
+                    addval = false;
+                    phnval = false;
+                    addres = "";
+                    phnres = "";
                   });
                 }
               },
@@ -101,6 +113,10 @@ class _tab1State extends State<tab1> {
                     nameres = "";
                     emailres = "";
                     passres = "";
+                    addval = false;
+                    phnval = false;
+                    addres = "";
+                    phnres = "";
                   });
                 }
               },
@@ -125,6 +141,10 @@ class _tab1State extends State<tab1> {
                     nameres = "";
                     emailres = "";
                     passres = "";
+                    addval = false;
+                    phnval = false;
+                    addres = "";
+                    phnres = "";
                   });
                 }
               },
@@ -139,6 +159,62 @@ class _tab1State extends State<tab1> {
               ),
               obscureText: true,
             ),
+            SizedBox(height: 20,),
+            TextField(
+              controller: phn,
+              onChanged: (s) {
+                if(s.isNotEmpty) {
+                  setState(() {
+                    nameval = false;
+                    passval = false;
+                    emailval = false;
+                    nameres = "";
+                    emailres = "";
+                    passres = "";
+                    addval = false;
+                    phnval = false;
+                    addres = "";
+                    phnres = "";
+                  });
+                }
+              },
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))
+                  ),
+                  label: Text('+91'),
+                  errorText: phnval? phnres : null,
+                  floatingLabelBehavior: FloatingLabelBehavior.auto
+              ),
+            ),
+            SizedBox(height: 20,),
+            TextField(
+              controller: add,
+              onChanged: (s) {
+                if(s.isNotEmpty) {
+                  setState(() {
+                    nameval = false;
+                    passval = false;
+                    emailval = false;
+                    nameres = "";
+                    emailres = "";
+                    passres = "";
+                    addval = false;
+                    phnval = false;
+                    addres = "";
+                    phnres = "";
+                  });
+                }
+              },
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))
+                  ),
+                  label: Text('Address'),
+                  errorText: addval? addres : null,
+                  floatingLabelBehavior: FloatingLabelBehavior.auto
+              ),
+            ),
             const SizedBox(height: 30,),
             SizedBox(
               height: 50,
@@ -147,8 +223,9 @@ class _tab1State extends State<tab1> {
                 setState(() {
                   isvisible = true;
                 });
-                if(name.text != "" && email.text != "" && pass.text != "") {
+                if(name.text != "" && email.text != "" && pass.text != "" && add.text != "" && phn.text != "" && phn.text.length >= 9 || phn.text.length < 9) {
                   res = await fcade.CreateUser(name.text, email.text, pass.text, "agency");
+                  await a_fcade.Register_agency(name.text, email.text);
                   if(res.contains('true')) {
                     isvisible = false;
                     Navigator.pushReplacementNamed(context, '/');
