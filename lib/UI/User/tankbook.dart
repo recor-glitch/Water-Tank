@@ -124,154 +124,163 @@ class _mybookingState extends State<mybooking> {
                   SizedBox(
                     height: 20,
                   ),
-                  Container(
-                      padding: EdgeInsets.all(22.0),
-                      child: Column(
-                        children: <Widget>[
-                          SizedBox(width: 10,),
-                          Text('Select your water requirement',style: TextStyle(fontSize: 20.0), ),
-                          SizedBox(height: 10,),
-                          Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Icon(Icons.water,color: Colors.grey,),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text('500 LTR'),
-                                      Text('Fees: 200 Rupees')
-                                    ],
+                  FutureBuilder(
+                    future: fstore.collection('Agency').doc(widget.agency.get('uid')).get(),
+                    builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                      if(snapshot.hasData) {
+                        var avail = snapshot.data.get('Availability') as List;
+
+                        return Container(
+                            padding: EdgeInsets.all(22.0),
+                            child: Column(
+                              children: <Widget>[
+                                SizedBox(width: 10,),
+                                Text('Select your water requirement',style: TextStyle(fontSize: 20.0), ),
+                                SizedBox(height: 10,),
+                                Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Icon(Icons.water,color: Colors.grey,),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text('${avail[0]['quantity']} LTR'),
+                                            Text('Fees: ${avail[0]['price']} Rupees')
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                          children: [
+                                            FloatingActionButton(
+                                              child: Icon(EvaIcons.minus, color: Colors.black87),
+                                              backgroundColor: Colors.white,
+                                              onPressed: () {
+                                                if(item1 != 0) {
+                                                  setState(() {
+                                                    item1--;
+                                                  });
+                                                }
+                                              },
+                                            ),
+                                            SizedBox(width: 10,),
+                                            Text('$item1',style: TextStyle(fontSize: 18)),
+                                            SizedBox(width: 10,),
+                                            FloatingActionButton(
+                                              child: Icon(Icons.add, color: Colors.black87),
+                                              backgroundColor: Colors.white,
+                                              onPressed: () {
+                                                setState(() {
+                                                  item1++;
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: [
-                                      FloatingActionButton(
-                                        child: Icon(EvaIcons.minus, color: Colors.black87),
-                                        backgroundColor: Colors.white,
-                                        onPressed: () {
-                                          if(item1 != 0) {
-                                            setState(() {
-                                              item1--;
-                                            });
-                                          }
-                                        },
-                                      ),
-                                      SizedBox(width: 10,),
-                                      Text('$item1',style: TextStyle(fontSize: 18)),
-                                      SizedBox(width: 10,),
-                                      FloatingActionButton(
-                                        child: Icon(Icons.add, color: Colors.black87),
-                                        backgroundColor: Colors.white,
-                                        onPressed: () {
-                                          setState(() {
-                                            item1++;
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Icon(Icons.water,color: Colors.grey,),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text('1000 LTR'),
-                                      Text('Fees: 500 Rupees')
-                                    ],
+                                ),
+                                Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Icon(Icons.water,color: Colors.grey,),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text('${avail[1]['quantity']} LTR'),
+                                            Text('Fees: ${avail[1]['price']} Rupees')
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                          children: [
+                                            FloatingActionButton(
+                                              child: Icon(EvaIcons.minus, color: Colors.black87),
+                                              backgroundColor: Colors.white,
+                                              onPressed: () {
+                                                if(item2 != 0) {
+                                                  setState(() {
+                                                    item2--;
+                                                  });
+                                                }
+                                              },
+                                            ),
+                                            SizedBox(width: 10,),
+                                            Text('$item2',style: TextStyle(fontSize: 18)),
+                                            SizedBox(width: 10,),
+                                            FloatingActionButton(
+                                              child: Icon(Icons.add, color: Colors.black87),
+                                              backgroundColor: Colors.white,
+                                              onPressed: () {
+                                                setState(() {
+                                                  item2++;
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: [
-                                      FloatingActionButton(
-                                        child: Icon(EvaIcons.minus, color: Colors.black87),
-                                        backgroundColor: Colors.white,
-                                        onPressed: () {
-                                          if(item2 != 0) {
-                                            setState(() {
-                                              item2--;
-                                            });
-                                          }
-                                        },
-                                      ),
-                                      SizedBox(width: 10,),
-                                      Text('$item2',style: TextStyle(fontSize: 18)),
-                                      SizedBox(width: 10,),
-                                      FloatingActionButton(
-                                        child: Icon(Icons.add, color: Colors.black87),
-                                        backgroundColor: Colors.white,
-                                        onPressed: () {
-                                          setState(() {
-                                            item2++;
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Icon(Icons.water,color: Colors.grey,),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text('10000 LTR'),
-                                      Text('Fees: 1000 Rupees')
-                                    ],
+                                ),
+                                Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Icon(Icons.water,color: Colors.grey,),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text('${avail[2]['quantity']} LTR'),
+                                            Text('Fees: ${avail[2]['price']} Rupees')
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                          children: [
+                                            FloatingActionButton(
+                                              child: Icon(EvaIcons.minus, color: Colors.black87),
+                                              backgroundColor: Colors.white,
+                                              onPressed: () {
+                                                if(item3 != 0) {
+                                                  setState(() {
+                                                    item3--;
+                                                  });
+                                                }
+                                              },
+                                            ),
+                                            SizedBox(width: 10,),
+                                            Text('$item3',style: TextStyle(fontSize: 18)),
+                                            SizedBox(width: 10,),
+                                            FloatingActionButton(
+                                              child: Icon(Icons.add, color: Colors.black87),
+                                              backgroundColor: Colors.white,
+                                              onPressed: () {
+                                                setState(() {
+                                                  item3++;
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: [
-                                      FloatingActionButton(
-                                        child: Icon(EvaIcons.minus, color: Colors.black87),
-                                        backgroundColor: Colors.white,
-                                        onPressed: () {
-                                          if(item3 != 0) {
-                                            setState(() {
-                                              item3--;
-                                            });
-                                          }
-                                        },
-                                      ),
-                                      SizedBox(width: 10,),
-                                      Text('$item3',style: TextStyle(fontSize: 18)),
-                                      SizedBox(width: 10,),
-                                      FloatingActionButton(
-                                        child: Icon(Icons.add, color: Colors.black87),
-                                        backgroundColor: Colors.white,
-                                        onPressed: () {
-                                          setState(() {
-                                            item3++;
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                  ),
+                                ),
+                              ],
+                            )
+                        );
+                      }
+                      return const Center(child: CircularProgressIndicator(),);
+                  },),
                   Container(
                       height: 130,
                       width: MediaQuery.of(context).size.width,

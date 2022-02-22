@@ -34,12 +34,6 @@ class _adminbasePageState extends State<adminbasePage> with TickerProviderStateM
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return [
             SliverAppBar(
-              actions: [
-                IconButton(onPressed: () {
-                  fauth.signOut();
-                  Navigator.pushReplacementNamed(context, '/login');
-                }, icon: Icon(Icons.exit_to_app))
-              ],
               backgroundColor: Colors.green[700],
               title: Text('Water Tank'),
               pinned: true,
@@ -67,10 +61,10 @@ class _adminbasePageState extends State<adminbasePage> with TickerProviderStateM
         },
         body: TabBarView(
           controller: _tabController,
-          children: const [
-            admintab1(),
-            admintab2(),
-            admintab3()
+          children: [
+            admintab1(controller: _tabController),
+            admintab2(controller: _tabController),
+            admintab3(controller: _tabController)
           ],
         ),
 

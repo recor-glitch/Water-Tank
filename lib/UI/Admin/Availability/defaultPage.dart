@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gps/UI/Admin/Availability/editPage.dart';
 
 
 
@@ -14,8 +17,13 @@ class availableDefault extends StatefulWidget {
 class _availableDefaultState extends State<availableDefault> {
 
 
+  late FirebaseAuth fauth;
+  late FirebaseFirestore fstore;
+
   @override
   void initState() {
+    fauth = FirebaseAuth.instance;
+    fstore = FirebaseFirestore.instance;
     // TODO: implement initState
     super.initState();
   }
@@ -55,18 +63,17 @@ class _availableDefaultState extends State<availableDefault> {
                     ],
                   )
               ),
-              FutureBuilder(builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              FutureBuilder(
+                future: fstore.collection('Agency').doc(fauth.currentUser!.uid).get(),
+                builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                 if(snapshot.hasData) {
-
-                }
-                if(!snapshot.hasData) {
-                  return ListView(
+                  var data = snapshot.data.get('Availability') as List;
+                  return ListView.builder(
+                    itemCount: data.length,
                     shrinkWrap: true,
-                    children: [
-                      getCard(500, 200),
-                      getCard(1000, 500),
-                      getCard(10000, 1000)
-                    ],
+                    itemBuilder: (BuildContext context, int index) {
+                      return getCard(data[index]['quantity'], data[index]['price'], index);
+                    },
                   );
                 }
                 return const CircularProgressIndicator();
@@ -77,7 +84,7 @@ class _availableDefaultState extends State<availableDefault> {
     );
   }
 
-  Widget getCard(int quantity, int price) {
+  Widget getCard(int quantity, int price, int option) {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: Card(
@@ -113,7 +120,11 @@ class _availableDefaultState extends State<availableDefault> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     MaterialButton(
-                      onPressed: () {},
+                      onPressed: () async{
+                        return showDialog(context: context, builder: (BuildContext context) {
+                          return editavailability(option: option);
+                        });
+                      },
                       color: Color(0xff4E295B),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),

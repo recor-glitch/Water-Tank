@@ -225,7 +225,7 @@ class _tab1State extends State<tab1> {
                 });
                 if(name.text != "" && email.text != "" && pass.text != "" && add.text != "" && phn.text != "" && phn.text.length >= 9 || phn.text.length < 9) {
                   res = await fcade.CreateUser(name.text, email.text, pass.text, "agency");
-                  await a_fcade.Register_agency(name.text, email.text);
+                  await a_fcade.Register_agency(name.text, email.text, phn.text, add.text.trim());
                   if(res.contains('true')) {
                     isvisible = false;
                     Navigator.pushReplacementNamed(context, '/');

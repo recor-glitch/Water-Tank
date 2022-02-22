@@ -5,10 +5,10 @@ import 'package:gps/Infrastructure/Google/Direction/direction_repository.dart';
 import 'package:gps/Models/Google%20Models/direction_model.dart';
 import 'package:location/location.dart';
 
-
-
 class g_map extends StatefulWidget {
-  const g_map({Key? key}) : super(key: key);
+  const g_map({Key? key, this.position, this.name}) : super(key: key);
+  final position;
+  final name;
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -28,10 +28,16 @@ class _MyAppState extends State<g_map> {
   var route;
   late DirectionData info;
   late DirectionRepository direction;
+  late BitmapDescriptor customIcon;
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<void> custom() async {
+    customIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(size: Size(30, 30)), 'assets/tank-truck.png');
   }
 
   @override
@@ -43,17 +49,17 @@ class _MyAppState extends State<g_map> {
 
   Future<void> Service() async {
     isServiceEnabled = await location.serviceEnabled();
-    if(!isServiceEnabled) {
+    if (!isServiceEnabled) {
       isServiceEnabled = await location.requestService();
-      if(!isServiceEnabled) {
+      if (!isServiceEnabled) {
         return;
       }
     }
 
     _permissionGranted = await location.hasPermission();
-    if(_permissionGranted == PermissionStatus.denied) {
+    if (_permissionGranted == PermissionStatus.denied) {
       _permissionGranted = await location.requestPermission();
-      if(_permissionGranted != PermissionStatus.granted) {
+      if (_permissionGranted != PermissionStatus.granted) {
         return;
       }
     }
@@ -62,20 +68,42 @@ class _MyAppState extends State<g_map> {
   @override
   Widget build(BuildContext context) {
     Service();
+    custom();
     return FutureBuilder(
       future: location.getLocation(),
       builder: (BuildContext context, AsyncSnapshot<LocationData> snapshot) {
-        if(snapshot.hasData) {
+        if (snapshot.hasData) {
           lat = snapshot.data!.latitude!;
           lon = snapshot.data!.longitude!;
           originpos = LatLng(lat, lon);
-          gotolocation(lat,lon);
-          origin = Marker(markerId: const MarkerId('mypos'),
+          gotolocation(lat, lon);
+          origin = Marker(
+              markerId: const MarkerId('mypos'),
               position: LatLng(lat, lon),
               draggable: false,
               infoWindow: const InfoWindow(title: 'Your Position'),
               icon: BitmapDescriptor.defaultMarker);
           mymarker.add(origin);
+          if (widget.position != null && widget.name == 'driver') {
+            var pos = Marker(
+                markerId: const MarkerId('destination'),
+                position: LatLng(
+                    widget.position['latitude'], widget.position['longitude']),
+                draggable: false,
+                infoWindow: InfoWindow(title: widget.name),
+                icon: customIcon);
+            mymarker.add(pos);
+          }
+          if (widget.position != null && widget.name == 'user') {
+            var pos = Marker(
+                markerId: const MarkerId('destination'),
+                position: LatLng(
+                    widget.position['latitude'], widget.position['longitude']),
+                draggable: false,
+                infoWindow: InfoWindow(title: widget.name),
+                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen));
+            mymarker.add(pos);
+          }
         }
         return Stack(
           children: [
@@ -84,23 +112,16 @@ class _MyAppState extends State<g_map> {
                 mapController.complete(controller);
               },
               initialCameraPosition: const CameraPosition(
-                target:  LatLng(26.144518, 91.736237),
+                target: LatLng(26.144518, 91.736237),
                 zoom: 12.0,
               ),
               markers: Set.from(mymarker),
               mapType: MapType.normal,
-              onLongPress: (loc) async {
-                despos = loc;
-                setState(() {
-                  destination = Marker(markerId: MarkerId('des'),
-                      position: loc,
-                      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-                      infoWindow: const InfoWindow(title: 'Destination'));
-                  mymarker.add(destination);
-                });
-                route = await direction.getDirection(originpos, despos);
-                info = route as DirectionData;
-                print('info:: $info');
+              onTap: (LatLng) {
+                if (widget.position != null) {
+                  gotolocation(widget.position['latitude'],
+                      widget.position['longitude']);
+                }
               },
             ),
           ],
@@ -111,6 +132,7 @@ class _MyAppState extends State<g_map> {
 
   Future<void> gotolocation(double lat, double lon) async {
     controller = await mapController.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(lat, lon),zoom: 15.0)));
+    controller.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: LatLng(lat, lon), zoom: 15.0)));
   }
 }
